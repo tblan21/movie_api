@@ -14,3 +14,5 @@
 ::1 - - [04/Jun/2023:19:41:55 +0000] "GET /documentation.html HTTP/1.1" 404 157 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36"
 ::1 - - [04/Jun/2023:19:42:27 +0000] "GET /documentation.html HTTP/1.1" 404 157 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36"
 ::1 - - [04/Jun/2023:19:42:27 +0000] "GET /documentation.html HTTP/1.1" 404 157 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36"
+::1 - - [05/Jun/2023:01:56:49 +0000] "GET /documentation HTTP/1.1" 200 439 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36"
+::1 - - [05/Jun/2023:01:56:49 +0000] "GET /favicon.ico HTTP/1.1" 404 150 "http://localhost:8080/documentation" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36"
