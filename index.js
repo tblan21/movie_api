@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
     res.send('Welcome to myFlix!');
 });
 
-app.use('/documentation', express.static(__dirname + '/documentation.html'));
+app.use(express.static('public'));
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
