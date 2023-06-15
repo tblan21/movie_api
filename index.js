@@ -19,173 +19,173 @@ const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {f
 
 app.use(morgan('combined', {stream: accessLogStream}));
 
-        }
-      ],
-      director: {
-        name: 'Paul Greengrass',
-        bio: 'Paul Greengrass CBE is a British film director, film producer, screenwriter and former journalist. He specialises in dramatisations of historic events and is known for his signature use of hand-held cameras.',
-        birth: '1955',
-        death: '',
-      },      
-    },
-    {
-      title: '500 Days of Summer',
-      description: 'After being dumped by the girl he believes to be his soulmate, hopeless romantic Tom Hansen reflects on their relationship to try and figure out where things went wrong and how he can win her back.',
-      genre: [ 
-        { 
-          name: 'Romance', 
-          description: 'A romance film generally refers to a type of genre fiction novel which places its primary focus on the relationship and romantic love between two people.' 
-        } 
-      ],
-      director: {
-        name: 'Mark Webb',
-        bio: 'Marc Preston Webb is an American music video director and filmmaker. Webb made his feature film directorial debut in 2009 with the romantic comedy 500 Days of Summer, and went on to direct The Amazing Spider-Man and The Amazing Spider-Man 2 in 2012 and 2014 respectively, which were later dubbed as the "Webb-Verse" by Marvel Studios in 2021.', 
-        birth: '1974',
-        death: '',
-      },       
-    },
-    {
-      title: 'Requiem for a Dream',
-      description: 'The drug-induced utopias of four Coney Island people are shattered when their addictions run deep.',
-      genre: [ 
-        { 
-          name: 'Drama', 
-          description: 'In film and television, drama is a category or genre of narrative fiction (or semi-fiction) intended to be more serious than humorous in tone.' 
-        } 
-      ],
-      director: {
-        name: 'Darren Aronofsky',
-        bio: 'Darren Aronofsky is an American filmmaker. His films are noted for their surreal, melodramatic, and often disturbing elements, frequently in the form of psychological fiction.', 
-        birth: '1969',
-        death: '',
-      },       
-    },
-    {
-      title: 'Harry Potter and the Goblet of Fire',
-      description: 'Harry Potter finds himself competing in a hazardous tournament between rival schools of magic, but he is distracted by recurring nightmares.',
-      genre: 
-        { 
-          name: 'Fantasy', 
-          description: 'Fantasy is a genre of speculative fiction involving magical elements, typically set in a fictional universe and sometimes inspired by mythology and folklore.' 
-        },
-      director: {
-        name: 'Mike Newell',
-        bio: 'Michael Cormac Newell is an English film and television director and producer. He won the BAFTA for Best Direction for Four Weddings and a Funeral, which also won the BAFTA Award for Best Film, and directed the films Donnie Brasco and Harry Potter and the Goblet of Fire.', 
-        birth: '1942',
-        death: '',
-      },       
-    },
-]
-
 // CREATE
 app.post('/users', (req,res) => {
-    const newUser = req.body;
+    Users.findOne({ Name: req.body.Name })
+      .then((user) => {
+        if (user) {
+          return res.status(400).send(req.body.Name + ' already exists.');
+        } else {
+          Users
+          .create({
+            Name: req.body.Name,
+            Password: req.body.Password,
+            Email: req.body.Email,
+            Birthday: req.body.Birthday
+          })
+          .then((user) =>{res.status(201).json(user) })
+         .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+         }) 
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send('Error: ' + error);
+      });
+});
 
-    if (newUser.name) {
-        newUser.id = uuid.v4();
-        users.push(newUser);
-        res.status(201).json(newUser)
-    } else {
-        res.status(400).send('Users need names.')
-    }
-}),
-
-app.post('/users/:id/:movieTitle', (req, res) => {
-    const { id, movieTitle } = req.params;
-
-    let user = users.find(user => user.id == id);
-
-    if (user) {
-        user.favoriteMovies.push(movieTitle);
-        res.status(200).send(movieTitle + ' has been added to user ' + id +'\'s array.');
-    } else {
-        res.status(400).send('No such user.')
-    }
-}),
+app.post('/users/:Name/movies/:MovieID', (req, res) => 
+{
+  Users.findOneAndUpdate({ Username: req.params.Username },
+    {
+      $push: { FavoriteMovies: req.params.MovieID }
+    },
+    { new: true },
+    (err, updatedUser ) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      } else {
+        res.json(updatedUser);
+      }
+    });
+});
 
 // UPDATE
-app.put('/users/:id', (req, res) => {
-    const { id } = req.params;
-    const updatedUser = req.body;
-
-    let user = users.find(user => user.id == id);
-
-    if (user) {
-        user.name = updatedUser.name;
-        res.status(200).json(user);
-    } else {
-        res.status(400).send('No such user.')
-    }
-}),
+app.put('/users/:Name', (req,res) => {
+  Users.findOneAndUpdate({ Name: req.params.Name },
+    { $set:
+      {
+        Name: req.body.Name,
+        Password: req.body.Password,
+        Email: req.body.Email,
+        Birthday: req.body.Birthday
+      }
+    },
+    { new: true },
+    (err, updatedUser) => {
+      if(err) {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      } else {
+        res.json(updatedUser);
+      }
+    });
+});
 
 // READ
 app.get('/', (req, res) => {
     res.send('Welcome to myFlix!');
 }),
 
-app.get('/movies', (req, res) => {
-    res.status(200).json(movies);
-}),
+app.get('/users', (req,res) => {
+  Users.find()
+    .then((users) => {
+      res.status(201).json(users);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
 
-app.get('/movies/:title', (req, res) => {
-    const { title } = req.params;
-    const movie = movies.find(movie => movie.title === title);
+app.get('/users/:Name', (req,res) => {
+  Users.findOne({ Name: req.params.Name })
+    .then((user) => {
+      res.json(user);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
 
-    if (movie) {
-        res.status(200).json(movie);
-    } else {
-        res.status(400).send('No such movie.')
-    }
-}),
+app.get('/movies', (req,res) =>{
+  Movies.find()
+    .then((movies) => {
+      res.status(201).json(movies);
+    })
+    .catch((err) => { 
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
 
-app.get('/movies/genre/:genreName', (req, res) => {
-    const { genreName } = req.params;
-    const genre = movies.find(movie => movie.genre.name === genreName).genre;
+app.get('/movies/:Title', (req, res) => {
+  Movies.findOne({ Title: req.params.Title })
+    .then((movie) => {
+      res.json(movie);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
 
-    if (genre) {
-        res.status(200).json(genre);
-    } else {
-        res.status(400).send('No such genre.')
-    }
-}),
+app.get('/movies/genre/:Name', (req, res) => {
+  Genres.findOne({ Name: req.params.Name })
+    .then((genre) => {
+      res.json(genre.Description);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
 
-app.get('/movies/directors/:directorName', (req, res) => {
-    const { directorName } = req.params;
-    const director = movies.find(movie => movie.director.name === directorName).director;
-
-    if (director) {
-        res.status(200).json(director);
-    } else {
-        res.status(400).send('No such director.')
-    }
-}),
+app.get('/movies/directors/:Name', (req, res) => {
+  Directors.findOne({ Name: req.params.Name })
+    .then((director) => {
+      res.json(director);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
 
 // DELETE
-app.delete('/users/:id/:movieTitle', (req,res) => {
-    const { id, movieTitle } = req.params;
+app.delete('/users/:Name/:favoriteMovie', (req,res) => {
+  Users.findOneAndRemove({ FavoriteMovie: req.params.favoriteMovie })
+    .then((favoriteMovie) => {
+      if (!favoriteMovie) {
+        res.status(400).send(req.params.favoriteMovie + ' was not found');
+      } else {
+        res.status(200).send(req.params.favoriteMovie + ' was deleted.');
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
 
-    let user = users.find(user => user.id == id);
-
-    if (user) {
-        user.favoriteMovies = user.favoriteMovies.filter(title => title !== movieTitle);
-        res.status(200).send(movieTitle + ' has been removed from user ' + id +'\'s array.');
-    } else {
-        res.status(400).send('No such user.')
-    }
-}),
-
-app.delete('/users/:id', (req,res) => {
-    const { id } = req.params;
-
-    let user = users.find(user => user.id == id);
-
-    if (user) {
-        user = users.filter(user => user.id != id);
-        res.status(200).send('User ' + id + ' has been deleted.');
-    } else {
-        res.status(400).send('No such user.')
-    }
-}),
+app.delete('/users/:Name', (req, res) => {
+  Users.findOneAndRemove({ Name: req.params.Name })
+    .then((user) => {
+      if(!user) {
+        res.status(400).send(req.params.Name + ' was not found.');
+      } else {
+        res.status(200).send(req.params.Name + ' was deleted.');
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
 
 app.use(express.static('public')),
 
