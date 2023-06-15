@@ -4,6 +4,12 @@ const express = require('express'),
     path = require('path'),
     bodyParser = require('body-parser'),
     uuid = require('uuid');
+    mongoose = require('mongoose');
+    Models = require('./models.js');
+    Movies = Models.Movie; 
+    Users = Models.User;
+
+mongoose.connect('mongodb://localhost:27017/test', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const app = express();
 
