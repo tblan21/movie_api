@@ -13,40 +13,6 @@ const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {f
 
 app.use(morgan('combined', {stream: accessLogStream}));
 
-// In-memory array of users
-const users = [
-    {
-        name: 'Taylor',
-        id: '0525',
-        favoriteMovies: ['Office Space']
-    },
-];
-
-// In-memory array of movies
-const movies = [  
-    {    
-      title: 'Office Space',    
-      description: 'Three company workers who hate their jobs decide to rebel against their greedy boss.',    
-      genre: [ 
-        { 
-          name: 'Comedy',        
-          description: 'Comedy is a genre of fiction that consists of discourses or works intended to be humorous or amusing by inducing laughter, especially in theatre, film, stand-up comedy, television, radio, books, or any other entertainment medium. '      
-        }         
-      ],
-      director: {
-        name: 'Mike Judge',
-        bio: 'Michael Craig Judge is an American actor, animator, filmmaker, and musician. He is the creator of the animated television series Beavis and Butt-Head, and the co-creator of the television series King of the Hill, The Goode Family, Silicon Valley, and Mike Judge Presents: Tales from the Tour Bus.',
-        birth: '1962',
-        death: '',
-      },
-    },
-    {
-      title: 'Captain Phillips',
-      description: 'The true story of Captain Richard Phillips and the 2009 hijacking by Somali pirates of the U.S.-flagged MV Maersk Alabama, the first American cargo ship to be hijacked in two hundred years.',
-      genre: [
-        {
-          name: 'Action',
-          description: 'Action movies usually involve high-energy, physical stunts and chases, and may or may not have a lot of dialogue.'
         }
       ],
       director: {
