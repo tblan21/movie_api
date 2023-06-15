@@ -65,7 +65,7 @@
                 </tr>
                 <tr>
                     <td>Allows users to add a movie to their list of favorites</td>
-                    <td>/users/:id/:movieTitle</td>
+                    <td>/users/:Name/movies/:MovieID</td>
                     <td>POST</td>
                     <td>:id
                         :movieTitle
@@ -75,7 +75,7 @@
                 </tr>
                 <tr>
                     <td>Allows users to remove a movie from their list of favorites</td>
-                    <td>/users/:id/:movieTitle</td>
+                    <td>/users/:Name/:favoriteMovie</td>
                     <td>DELETE</td>
                     <td>:id
                         :movieTitle
@@ -85,7 +85,7 @@
                 </tr>
                 <tr>
                     <td>Allows existing users to deregister</td>
-                    <td>/users/:id</td>
+                    <td>/users/:Name</td>
                     <td>DELETE</td>
                     <td>:id</td>
                     <td>None</td>
