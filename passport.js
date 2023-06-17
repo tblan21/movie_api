@@ -8,7 +8,7 @@ let Users = Models.User,
     ExtractJWT = passportJWT.ExtractJwt;
 
 passport.use(new LocalStrategy({
-    usernameField: 'Userame',
+    usernameField: 'Username',
     passwordField: 'Password'
 }, (username, password, callback) => {
     console.log(username + ' ' + password);
