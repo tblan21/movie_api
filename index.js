@@ -25,14 +25,14 @@ app.use(morgan('combined', {stream: accessLogStream}));
 
 // CREATE
 app.post('/users', (req,res) => {
-    Users.findOne({ Name: req.body.Name })
+    Users.findOne({ Username: req.body.Username })
       .then((user) => {
         if (user) {
-          return res.status(400).send(req.body.Name + ' already exists.');
+          return res.status(400).send(req.body.Username + ' already exists.');
         } else {
           Users
           .create({
-            Name: req.body.Name,
+            Username: req.body.Username,
             Password: req.body.Password,
             Email: req.body.Email,
             Birthday: req.body.Birthday
@@ -50,10 +50,10 @@ app.post('/users', (req,res) => {
       });
 });
 
-app.post('/users/:Name/movies/:MovieID', (req, res) => 
+app.post('/users/:Username/movies/:MovieID', (req, res) => 
 {
   Users.findOneAndUpdate(
-    { Name: req.params.Name },
+    { Username: req.params.Username },
     {$addToSet: { FavoriteMovies: req.params.MovieID },},
     { new: true }
   )
@@ -71,11 +71,11 @@ app.post('/users/:Name/movies/:MovieID', (req, res) =>
 });
 
 // UPDATE
-app.put('/users/:Name', (req,res) => {
-  Users.findOneAndUpdate({ Name: req.params.Name },
+app.put('/users/:Username', (req,res) => {
+  Users.findOneAndUpdate({ Username: req.params.Username },
     { $set:
       {
-        Name: req.body.Name,
+        Username: req.body.Username,
         Password: req.body.Password,
         Email: req.body.Email,
         Birthday: req.body.Birthday,
@@ -108,8 +108,8 @@ app.get('/users', (req,res) => {
     });
 });
 
-app.get('/users/:Name', (req,res) => {
-  Users.findOne({ Name: req.params.Name })
+app.get('/users/:Username', (req,res) => {
+  Users.findOne({ Username: req.params.Username })
     .then((user) => {
       res.json(user);
     })
@@ -119,7 +119,7 @@ app.get('/users/:Name', (req,res) => {
     });
 });
 
-app.get('/movies', (req,res) =>{
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req,res) => {
   Movies.find()
     .then((movies) => {
       res.status(201).json(movies);
@@ -168,7 +168,7 @@ app.get('/movies/directors/:directorName', (req, res) => {
 });
 
 // DELETE
-app.delete('/users/:Name/:favoriteMovie', (req,res) => {
+app.delete('/users/:Username/:favoriteMovie', (req,res) => {
   Users.findOneAndRemove({ FavoriteMovie: req.params.favoriteMovie })
     .then((favoriteMovie) => {
       if (!favoriteMovie) {
@@ -183,13 +183,13 @@ app.delete('/users/:Name/:favoriteMovie', (req,res) => {
     });
 });
 
-app.delete('/users/:Name', (req, res) => {
-  Users.findOneAndRemove({ Name: req.params.Name })
+app.delete('/users/:Username', (req, res) => {
+  Users.findOneAndRemove({ Username: req.params.Username })
     .then((user) => {
       if(!user) {
-        res.status(400).send(req.params.Name + ' was not found.');
+        res.status(400).send(req.params.Username + ' was not found.');
       } else {
-        res.status(200).send(req.params.Name + ' was deleted.');
+        res.status(200).send(req.params.Username + ' was deleted.');
       }
     })
     .catch((err) => {
