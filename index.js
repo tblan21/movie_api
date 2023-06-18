@@ -9,12 +9,17 @@ const express = require('express'),
     Movies = Models.Movie; 
     Users = Models.User;
 
+const { check, validationResult } = require('express-validator');
+
 mongoose.connect('mongodb://localhost:27017/test', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+const cors = require('cors');
+app.use(cors());
 
 let auth = require('./auth')(app);
 const passport = require('passport');
@@ -25,7 +30,18 @@ const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {f
 app.use(morgan('combined', {stream: accessLogStream}));
 
 // CREATE
-app.post('/users', (req,res) => {
+app.post('/users', 
+  [
+    check('Username', 'Username is required').isLength({min: 4}),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()
+  ], (req,res) => {
+    let errors = validationResult(req);
+    if (!errors.isEmpty()){
+      return res.status(422).json({ errors: errors.array()});
+    }
+    let hashedPassword = Users.hashPassword(req.body.Password);
     Users.findOne({ Username: req.body.Username })
       .then((user) => {
         if (user) {
@@ -34,12 +50,12 @@ app.post('/users', (req,res) => {
           Users
           .create({
             Username: req.body.Username,
-            Password: req.body.Password,
+            Password: hashedPassword,
             Email: req.body.Email,
             Birthday: req.body.Birthday
           })
           .then((user) =>{res.status(201).json(user) })
-         .catch((error) => {
+          .catch((error) => {
             console.error(error);
             res.status(500).send('Error: ' + error);
          }) 
@@ -72,25 +88,35 @@ app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { sess
 });
 
 // UPDATE
-app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (req,res) => {
-  Users.findOneAndUpdate({ Username: req.params.Username },
-    { $set:
-      {
-        Username: req.body.Username,
-        Password: req.body.Password,
-        Email: req.body.Email,
-        Birthday: req.body.Birthday,
-      },
-    },
-    { new: true }
-  ) 
-  .then((user) => {
-    if (!user) {
-      return res.status(400).send('User not found.');
-    } else {
-      res.json(user);
+app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
+  [
+    check('Username', 'Username is required').isLength({min: 4}),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()
+  ], (req,res) => {
+    let errors = validationResult(req);
+    if (!errors.isEmpty()){
+      return res.status(422).json({ errors: errors.array()});
     }
-  })
+    Users.findOneAndUpdate({ Username: req.params.Username },
+      { $set:
+        {
+          Username: req.body.Username,
+          Password: hashedPassword,
+          Email: req.body.Email,
+          Birthday: req.body.Birthday,
+        },
+      },
+      { new: true }
+    ) 
+    .then((user) => {
+      if (!user) {
+        return res.status(400).send('User not found.');
+      } else {
+        res.json(user);
+      }
+    })
 });
 
 // READ
@@ -204,8 +230,9 @@ app.use(express.static('public')),
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');
-}),
+});
 
-app.listen(8080, () => {
-    console.log('My app is listening on port 8080.');
-})
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0',() => {
+  console.log('Listening on Port ' + port);
+});
