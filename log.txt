@@ -127,3 +127,4 @@
 ::1 - - [17/Jun/2023:19:07:54 +0000] "POST /users HTTP/1.1" 400 25 "-" "PostmanRuntime/7.32.3"
 ::1 - - [17/Jun/2023:19:08:31 +0000] "GET /login?Username=Autumnivy&Password=raven HTTP/1.1" 404 144 "-" "PostmanRuntime/7.32.3"
 ::1 - - [17/Jun/2023:19:42:09 +0000] "POST /users HTTP/1.1" 400 25 "-" "PostmanRuntime/7.32.3"
+::1 - - [17/Jun/2023:20:58:51 +0000] "POST /users HTTP/1.1" 400 25 "-" "PostmanRuntime/7.32.3"
