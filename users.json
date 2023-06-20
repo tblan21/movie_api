@@ -1,4 +1,4 @@
-[{"_id":{"$oid":"648633b414747c587c32b623"},"Username":"tblan21","Password":"rhirhi2020","Email":"tmb2225@gmail.com","Birthday":{"$date":"1995-05-25T00:00:00Z"},"FavoriteMovies":[{"$oid":"64862cf614747c587c32b619"}]},
-{"_id":{"$oid":"648633e814747c587c32b624"},"Username":"sequin","Password":"peaches2021","Email":"sequin@gmail.com","Birthday":{"$date":"1999-11-22T00:00:00Z"},"FavoriteMovies":[{"$oid":"6486311e14747c587c32b61e"}]},
-{"_id":{"$oid":"6486343914747c587c32b625"},"Username":"granny1975","Password":"guinness2007","Email":"granny@gmail.com","Birthday":{"$date":"1975-03-24T00:00:00Z"},"FavoriteMovies":[{"$oid":"6486318414747c587c32b61f"}]},
-{"_id":{"$oid":"6486347214747c587c32b626"},"Username":"rhiannon","Password":"rhiannontina6","Email":"rhirhi@gmail.com","Birthday":{"$date":"2017-03-23T00:00:00Z"},"FavoriteMovies":[{"$oid":"64862d9814747c587c32b61a"}]}]
+{"_id":{"$oid":"648633b414747c587c32b623"},"Username":"tblan21","Password":"rhirhi2020","Email":"tmb2225@gmail.com","Birthday":{"$date":"1995-05-25T00:00:00Z"},"FavoriteMovies":[{"$oid":"64862cf614747c587c32b619"}]}
+{"_id":{"$oid":"648633e814747c587c32b624"},"Username":"sequin","Password":"peaches2021","Email":"sequin@gmail.com","Birthday":{"$date":"1999-11-22T00:00:00Z"},"FavoriteMovies":[{"$oid":"6486311e14747c587c32b61e"}]}
+{"_id":{"$oid":"6486343914747c587c32b625"},"Username":"granny1975","Password":"guinness2007","Email":"granny@gmail.com","Birthday":{"$date":"1975-03-24T00:00:00Z"},"FavoriteMovies":[{"$oid":"6486318414747c587c32b61f"}]}
+{"_id":{"$oid":"6486347214747c587c32b626"},"Username":"rhiannon","Password":"rhiannontina6","Email":"rhirhi@gmail.com","Birthday":{"$date":"2017-03-23T00:00:00Z"},"FavoriteMovies":[{"$oid":"64862d9814747c587c32b61a"}]}
