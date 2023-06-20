@@ -4,7 +4,6 @@
   "description": " ",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
     "dev": "react-scripts start",
     "start": "serve -s build",
     "build": "react-scripts build",
